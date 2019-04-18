@@ -7,3 +7,15 @@
 
 # .tfvars files
 *.tfvars
+
+# Plans
+*.plans
+
+# Secrets
+secrets.tf
+
+# Mac
+.DS_Store
+
+# Idea
+.idea/*
