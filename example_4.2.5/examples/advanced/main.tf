@@ -1,6 +1,6 @@
 provider "aws" {
-  version = "~> 1.2"
   region  = "us-west-2"
+  version = "~> 1.2"
 }
 
 module "base_network" {
