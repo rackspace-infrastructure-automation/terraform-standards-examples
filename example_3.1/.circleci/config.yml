@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  plan:
+    docker:
+      - image: rackautomation/rackspace-toolbox:1
+    steps:
+      - checkout
+      - add_ssh_keys
+      - run: lint.sh
+      - run:
+          name: plan.sh
+          command: plan.sh
+          no_output_timeout: 20m # don't break if it takes a while to refresh/plan
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - .terraform.*.tar.gz
+            - terraform.*.plan
+            - changed_layers
+            - full_plan_output.log
+
+  apply:
+    docker:
+      - image: rackautomation/rackspace-toolbox:1
+    steps:
+      - checkout
+      - add_ssh_keys
+      - attach_workspace:
+          at: workspace
+      - run: apply.sh
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - plan
+      - apply:
+          requires:
+            - plan
+          filters:
+            branches:
+              only: master
